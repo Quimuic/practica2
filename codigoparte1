@@ -1,0 +1,70 @@
+media_dias = df.pl_orbper.mean()
+media_masa = df.pl_bmassj.mean()
+media_radio = df.pl_radj.mean()
+media_temperatura = df.st_teff.mean()
+
+print(f"{media_dias} días")
+print(f"{media_masa} masas de Jupiter")
+print(f"{media_radio} radios de Jupiter")
+print(f"{media_temperatura} Kelvins")
+**
+std_dias = df.pl_orbper.std(ddof=1)
+std_dias_df0=df.pl_orbper.std()
+std_masa = df.pl_bmassj.std(ddof=1)
+std_radio = df.pl_radj.std(ddof=1)
+std_temperatura = df.st_teff.std(ddof=1)
+
+print(f"{std_dias} días")
+print(f"{std_dias_df0} días")
+print(f"{std_masa} masas de Jupiter")
+print(f"{std_radio} radios de Jupiter")
+print(f"{std_temperatura} Kelvins")
+
+**
+alpha=0.05
+**
+media_dias 
+std_dias
+
+z = norm.ppf(1. - alpha / 2.)
+correction = z * np.sqrt(std_dias / len(df))
+
+print(f"IC para la media de período orbital: [{media_dias - correction}, {media_dias + correction}] días, para un 95% de confianza", flush=True)
+**
+media_masa 
+std_masa
+
+z = norm.ppf(1. - alpha / 2.) 
+correction = z * np.sqrt(std_masa / len(df))
+
+print(f"IC para la media de masa: [{media_masa - correction}, {media_masa + correction}] masas de Jupiter, para un 95% de confianza", flush=True)
+**
+media_radio 
+std_radio
+
+z = norm.ppf(1. - alpha / 2.) 
+correction = z * np.sqrt(std_radio / len(df))
+
+print(f"IC para la media de radio: [{media_radio - correction}, {media_radio + correction}] radios de Jupiter, para un 95% de confianza", flush=True)
+**
+media_temperatura 
+std_temperatura
+
+z = norm.ppf(1. - alpha / 2.) 
+correction = z * np.sqrt(std_temperatura / len(df))
+
+print(f"IC para la media de temperatura: [{media_temperatura - correction}, {media_temperatura + correction}] K, para un 95% de confianza", flush=True)
+**
+new_df = len(df) - 1
+
+chi_left = chi2.ppf(1. - alpha / 2., new_df)
+chi_right = chi2.ppf(alpha / 2., new_df)
+
+corr_left = new_df / chi_left
+corr_right = new_df / chi_right
+
+print(f"IC para la desviación en el período orbital: [{std_dias * corr_left}, {std_dias * corr_right}]", flush=True)
+print(f"IC para la desviación en la masa: [{std_masa * corr_left}, {std_masa * corr_right}]", flush=True)
+print(f"IC para la desviación en el radio: [{std_radio * corr_left}, {std_radio * corr_right}]", flush=True)
+print(f"IC para la desviación en la temperatura: [{std_temperatura * corr_left}, {std_temperatura * corr_right}]", flush=True)
+
